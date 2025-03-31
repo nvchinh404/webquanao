@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@include('admin.layouts.app')
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -7,21 +7,20 @@
     <title>Admin Panel Dashboard</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <!-- Bạn có thể thêm link Bootstrap hoặc CSS khác tại đây -->
-    
 </head>
 <body>
     <div class="wrapper">
         <!-- Sidebar bên trái -->
         <div class="sidebar">
             <div>
-                <h2>Admin Panel</h2>
+                <h2>Trang chủ admin</h2>
                 <ul>
-                    <li><a href="{{ route('admin.users.index') }}">Người dùng</a></li>
-                    <li><a href="{{ route('admin.categories.index') }}">Danh mục</a></li>
-                    <li><a href="{{ route('admin.products.index') }}">Sản phẩm</a></li>
-                    <li><a href="{{ route('admin.brands.index') }}">Nhãn hiệu</a></li>
-                    <li><a href="{{ route('reports.index') }}">Báo cáo</a></li>
-                    <li><a href="{{ route('orders.index') }}">Đơn hàng</a></li>
+                    <li><a href="{{ route('admin.users.index') }}"> Người dùng</a></li>
+                    <li><a href="{{ route('admin.categories.index') }}"> Danh mục</a></li>
+                    <li><a href="{{ route('admin.products.index') }}"> Sản phẩm</a></li>
+                    <li><a href="{{ route('admin.brands.index') }}"> Nhãn hiệu</a></li>
+                    <li><a href="{{ route('reports.index') }}"> Báo cáo</a></li>
+                    <li><a href="{{ route('admin.orders.index') }}"> Đơn hàng</a></li>
                 </ul>
             </div>
             <div class="logout-btn">
@@ -35,7 +34,7 @@
         <div class="main-content">
             <!-- Thanh navbar trên cùng -->
             <div class="navbar-top">
-                <span>Xin chào, {{ auth()->user()->name ?? 'Admin' }}</span>
+                <span>Xin chào, Admin {{ auth()->user()->name ?? 'Admin' }}</span>
             </div>
             <!-- Nội dung Dashboard -->
             <div class="container mt-4">

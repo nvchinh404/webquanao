@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Auth\Authenticatable;
+use App\Models\Order;
+use App\Models\Review;
+use App\Models\Cart;
 
 class User extends Model implements AuthenticatableContract
 {
@@ -24,8 +27,8 @@ class User extends Model implements AuthenticatableContract
         return $this->hasMany(Review::class);
     }
 
-    // Quan hệ: Một user có nhiều carts
-    public function carts()
+    // Quan hệ: Một user có nhiều cart items (nên dùng tên này thay vì carts)
+    public function cartItems()
     {
         return $this->hasMany(Cart::class);
     }

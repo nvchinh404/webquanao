@@ -6,67 +6,105 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             font-family: 'Roboto', sans-serif;
-            position: relative;
-            margin: 0;
-            padding: 0;
+            background: linear-gradient(135deg,rgb(247, 215, 223),rgb(19, 18, 18));
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        .form-container {
+        .auth-container {
             position: relative;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
             text-align: center;
         }
+        .auth-container h2 {
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        .form-control {
+            border-radius: 50px;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .btn-primary {
+            width: 100%;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .alert {
+            margin-top: 10px;
+        }
+        .back-link {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            text-decoration: none;
+            color: #ff416c;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .back-link:hover {
+            color: #ff4b2b;
+        }
         #otpInputs {
             display: flex;
             justify-content: center;
-            gap: 5px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
         .otp-input {
-            width: 40px;
+            width: 50px;
+            height: 50px;
             text-align: center;
-            padding: 10px;
-            font-size: 16px;
-        }
-        .btn-link {
-            text-decoration: none;
-            font-size: 14px;
-            color: #007bff;
-        }
-        .btn-link:hover {
-            color: #0056b3;
+            font-size: 20px;
+            border-radius: 50px;
+            border: 1px solid #ccc;
         }
         .resend-wrapper {
             margin-top: 15px;
         }
-        /* Đặt đường dẫn "← Quay lại" ở góc dưới bên trái của container */
-        .back-link {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
+        .btn-link {
             text-decoration: none;
-            color: #007bff;
             font-size: 14px;
+            color: #ff416c;
             font-weight: 500;
+            background: none;
+            border: none;
+            padding: 0;
         }
-        .back-link:hover {
+        .btn-link:hover {
+            color: #ff4b2b;
             text-decoration: underline;
+        }
+        .text-muted {
+            color: #6c757d;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2 class="mb-3">Xác thực mã OTP</h2>
+    <div class="auth-container">
+        <h2>Xác thực mã OTP</h2>
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -93,17 +131,15 @@
             <button type="submit" class="btn btn-primary">Xác nhận</button>
         </form>
 
-        <!-- Nút gửi lại mã với timer -->
         <div class="resend-wrapper">
             <form action="{{ route('password.resend') }}" method="POST">
                 @csrf
                 <input type="hidden" name="email" value="{{ session('email') }}">
-                <button type="submit" class="btn btn-link" id="resendBtn" disabled>Gửi lại mã</button>
+                <button type="submit" class="btn-link" id="resendBtn" disabled>Gửi lại mã</button>
                 <span id="timer" class="text-muted"></span>
             </form>
         </div>
 
-        <!-- Đường dẫn "← Quay lại" quay về trang quên mật khẩu -->
         <a href="{{ route('password.request') }}" class="back-link">← Quay lại</a>
     </div>
 
@@ -111,7 +147,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             const inputs = document.querySelectorAll('.otp-input');
 
-            // Chỉ cho phép nhập số
             inputs.forEach((input, index) => {
                 input.addEventListener('keypress', function(e) {
                     const char = String.fromCharCode(e.which);
@@ -130,7 +165,6 @@
                 });
             });
             
-            // Đếm ngược 60 giây cho nút gửi lại mã
             const resendBtn = document.getElementById('resendBtn');
             const timerSpan = document.getElementById('timer');
             let countdown = 60;

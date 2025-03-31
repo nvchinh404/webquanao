@@ -16,7 +16,7 @@
         }
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            background: linear-gradient(135deg,rgb(247, 215, 223),rgb(19, 18, 18));
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -87,21 +87,32 @@
             color: #ff4b2b;
         }
     </style>
+    <script>
+        function togglePasswordVisibility(event) {
+            const passwordField = document.getElementById('password');
+            if (event.type === 'mousedown') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="auth-container">
         <h1>Đăng nhập</h1>
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                {{ $errors->first() }}
-            </div>
-        @endif
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <input type="email" name="email" class="form-control" placeholder="Email" required>
-            <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required>
+            <div style="position: relative;">
+                <input type="password" name="password" id="password" class="form-control" placeholder="Mật khẩu" required>
+                <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px;" 
+                      onmousedown="togglePasswordVisibility(event)" onmouseup="togglePasswordVisibility(event)" onmouseleave="togglePasswordVisibility(event)">
+                      👁️
+                </span>
+            </div>
             <small class="d-block text-end mt-1">
-        <a href="{{ route('password.request') }}" class="text-decoration-none text-danger">Quên mật khẩu?</a>
+                <a href="{{ route('password.request') }}" class="text-decoration-none text-danger">Quên mật khẩu?</a>
             </small>
 
             <button type="submit" class="btn btn-primary">Đăng nhập</button>

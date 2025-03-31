@@ -15,10 +15,10 @@ class ReportController extends Controller
         $totalUsers = User::count();
 
         // Tổng thu nhập từ các đơn hàng đã thanh toán thành công (sử dụng cột total_price)
-        $totalIncome = Order::where('status', 'paid')->sum('total_price');
+        $totalIncome = Order::where('status', 'completed')->sum('total_price');
 
         // Tổng số đơn hàng đã thanh toán thành công
-        $totalOrdersPaid = Order::where('status', 'paid')->count();
+        $totalOrdersPaid = Order::where('status', 'completed')->count();
 
         return view('admin.reports.index', compact('totalUsers', 'totalIncome', 'totalOrdersPaid'));
     }

@@ -17,6 +17,7 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->middleware('auth'); // Bảo vệ route bằng middleware auth
+        
     }
 
     // Dashboard Admin

@@ -52,25 +52,27 @@ class PasswordResetController extends Controller
 
     // Xác minh OTP
     public function verifyOtp(Request $request)
-{
-    // Kiểm tra rằng mỗi ô phải có 1 ký tự số
-    $request->validate([
-        'email' => 'required|email',
-        'otp'   => 'required|array',
-        'otp.*' => 'required|numeric|digits:1',
-    ]);
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required|array',
+            'otp.*' => 'required|numeric|digits:1',
+        ]);
 
-    // Chuyển đổi mảng OTP thành chuỗi
-    $otpArray = $request->input('otp'); // Mảng 6 phần tử
-    $otp = implode('', $otpArray); // Chuyển thành chuỗi, ví dụ "123456"
+        $email = $request->input('email') ?? session('email'); // Lấy email từ form
 
-    // Kiểm tra mã OTP
-    if (Cache::get("otp_{$request->email}") == $otp) {
-        return redirect()->route('password.reset')->with('email', $request->email);
-    } else {
-        return back()->withErrors(['otp' => 'Mã xác thực không đúng hoặc đã hết hạn.']);
+        if (!$email) {
+            return redirect()->route('password.request')->withErrors(['email' => 'Vui lòng nhập email lại từ đầu.']);
+        }
+        $otpArray = $request->input('otp');
+        $otp = implode('', $otpArray); // Chuyển thành chuỗi "123456"
+
+        if (Cache::get("otp_{$email}") == $otp) {
+            return redirect()->route('password.reset')->with('email', $email);
+        } else {
+            return back()->withErrors(['otp' => 'Mã xác thực không đúng hoặc đã hết hạn.']);
+        }
     }
-}
 
 
     // Hiển thị form đặt lại mật khẩu
@@ -108,17 +110,21 @@ class PasswordResetController extends Controller
     ]);
 
     $email = $request->email;
+    $user = User::where('email', $email)->first();
 
-    // Nếu mã OTP đã tồn tại trong cache, lấy lại mã đó, nếu không tạo mới và lưu vào cache
-    if (Cache::has("otp_{$email}")) {
-        $otpCode = Cache::get("otp_{$email}");
-    } else {
-        $otpCode = mt_rand(100000, 999999); // Tạo mã OTP 6 chữ số mới
-        Cache::put("otp_{$email}", $otpCode, 60);
+    if (!$user) {
+        return back()->withErrors(['email' => 'Email không tồn tại trong hệ thống.']);
     }
 
-    // Gửi email chứa mã OTP (sử dụng Mailable ResetPasswordMail)
+    // Tạo mã OTP mới
+    $otpCode = mt_rand(100000, 999999);
+    Cache::put("otp_{$email}", $otpCode, 60);
+
+    // Gửi email
     Mail::to($email)->send(new ResetPasswordMail($otpCode));
+
+    // Lưu email vào session để giữ trạng thái
+    $request->session()->put('email', $email);
 
     return back()->with('success', 'Mã xác thực đã được gửi lại.');
 }

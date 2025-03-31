@@ -16,7 +16,7 @@
         }
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            background: linear-gradient(135deg,rgb(247, 215, 223),rgb(19, 18, 18));
             min-height: 100vh;
             display: flex;
             align-items: center;
